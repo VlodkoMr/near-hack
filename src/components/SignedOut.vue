@@ -6,7 +6,9 @@
     <div class="row">
       <div class="col-6">
         <h3 class="mb-3">Platform for you to create <span class="text-other">StringArt</span> NFTs</h3>
-        <p>The first cross-chain ecosystem where you can manifest digital NFTs in the physical world. Own unique NFTs from your favorite brands, projects,
+        <p>
+          The first cross-chain ecosystem where you can manifest digital NFTs in the physical world.
+          Own unique NFTs from your favorite brands, projects,
           influencers and artists, which you can convert into a wide range of products, complete with Proof of Authenticity.
         </p>
         <p class="auth-btn">

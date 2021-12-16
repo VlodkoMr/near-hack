@@ -5,13 +5,14 @@
         <img src="../assets/logo.svg" alt="" height="40" class="mt-2">
         <div class="text-right">
           <span class="username">{{ accountId }}</span>
-          <button @click="isAddScreen=true" class="btn btn-primary m-2">New Item</button>
+          <button @click="isAddScreen=true" class="btn btn-outline-primary m-2">New Item</button>
           <button class="btn btn-outline-danger" v-on:click="logout">Sign out</button>
         </div>
       </div>
     </header>
     <main class="container">
       <div v-if="!isAddScreen">
+        <h4 class="text-center mb-4">My StringArt</h4>
         <Preloader color="grey" v-if="!ready"/>
 
         <div class="cards" v-if="ready && myItems.length">
@@ -19,20 +20,27 @@
                   v-for="item in myItems"
                   :key="item.token_id"
                   :img-src="item.metadata.media">
-            <b-button href="#" variant="secondary">Send</b-button>
-            <b-button href="#" variant="primary">Create Phisical Item</b-button>
+            <!--            <p>{{ item.description }}</p>-->
+            <p class="card-description">20x20x3</p>
+            <div class="card-buttons">
+              <b-button href="#" variant="secondary btn-sm">Send NFT</b-button>
+              <b-button href="#" variant="primary btn-sm">Create Phisical Item</b-button>
+            </div>
           </b-card>
         </div>
 
         <div v-if="ready && !myItems.length" class="text-center">
-          *You don't have StringArt, but you can
-          <span class="link-primary text-decoration-underline cursor-pointer" @click="isAddScreen=true">Create New Item</span>
+          <img src="../assets/noItems.png" alt="" width="400">
+          <div class="mt-4">
+            You don't have StringArt, but you can
+            <span class="link-primary text-decoration-underline cursor-pointer" @click="isAddScreen=true">Create New Item</span>
+          </div>
         </div>
       </div>
 
       <div v-if="isAddScreen" class="form-block">
         <form @submit.prevent="addNewItem" class="col-4 offset-4">
-          <h4 class="text-center mb-3">Create new StringArt</h4>
+          <h4 class="text-center mb-4">Create new StringArt</h4>
           <label class="form-group d-block mb-2">
             <span class="form-label">Art Title<sup>*</sup></span>
             <input type="text" required name="title" class="form-control" v-model="createForm.title"/>
@@ -186,17 +194,17 @@ export default {
     },
     tmpCreateNFT() {
       const json = [123, 1232, 435, 346, 6, 456, 46, 23, 43, 4, 32, 3, 53, 45, 345, 23];
-      this.createForm.title = 'test 1';
+      this.createForm.title = 'test 2';
       this.createNFT(
-        "12345678",
-        "https://forklog.com/wp-content/uploads/near2.png",
+        "123456789",
+        "https://www.dhresource.com/0x0/f2/albu/g11/M01/87/FB/rBNaFl8f-beARRmbAAKdNBeOmZc224.jpg/lover-hands-graffiti-art-street-art-canvas.jpg",
         JSON.stringify(json)
       );
     },
     async createNFT(hash, mediaUrl, coordinates) {
       const token_metadata = {
-        description: "Just Random NFT description",
-        title: this.createForm.title.toString(),
+        title: this.createForm.title,
+        description: `${this.createForm.width}x${this.createForm.height}x${this.createForm.border}`,
         media: mediaUrl,
         copies: 1,
         extra: coordinates,
