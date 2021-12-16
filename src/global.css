@@ -1,0 +1,36 @@
+header {
+    text-align: right;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: 23% 23% 23% 23%;
+    grid-column-gap: 2%;
+}
+
+.cards img {
+    height: 250px;
+    object-fit: cover;
+}
+
+.form-buttons {
+    display: grid;
+    grid-template-columns: 48% 48%;
+    grid-column-gap: 4%;
+}
+
+.input-group-prepend, .input-group-append {
+    width: 90px;
+    text-align: center;
+}
+
+.divider {
+    display: inline-block;
+    width: 20px;
+    line-height: 30px;
+    text-align: center;
+}
+
+.form-block {
+    position: relative;
+}
