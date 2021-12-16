@@ -95,7 +95,7 @@
     <b-modal id="modal-send" title="Send NFT" hide-footer>
       <!--      {{ selectedNFT }}-->
       <div class="p-5">
-        <p>Send To Address:</p>
+        <p>Send NFT to NEAR Account:</p>
         <b-input-group class="mt-3">
           <input type="text" class="form-control" placeholder="NEAR Address"/>
           <b-input-group-append>
@@ -174,7 +174,7 @@ export default {
       if (!files.length) return;
 
       let reader = new FileReader();
-      reader.readAsDataURL(files[0]);
+      reader.readAsBinaryString(files[0]);
       reader.onload = () => {
         this.createForm.media = reader.result;
       };
