@@ -97,9 +97,9 @@
       <div class="p-5">
         <p>Send NFT to NEAR Account:</p>
         <b-input-group class="mt-3">
-          <input type="text" class="form-control" placeholder="NEAR Address"/>
+          <input type="text" class="form-control" placeholder="NEAR Address" v-model="sendToNearAddress"/>
           <b-input-group-append>
-            <b-button variant="primary d-block send-btn">Send</b-button>
+            <b-button variant="primary d-block send-btn" @click="sendNFT">Send</b-button>
           </b-input-group-append>
         </b-input-group>
       </div>
@@ -143,7 +143,8 @@ export default {
         isUpload: false
       },
       ready: false,
-      selectedNFT: "",
+      selectedNFT: {},
+      sendToNearAddress: "vlodkow.testnet",
       myItems: [],
     }
   },
@@ -174,7 +175,7 @@ export default {
       if (!files.length) return;
 
       let reader = new FileReader();
-      reader.readAsBinaryString(files[0]);
+      reader.readAsDataURL(files[0]);
       reader.onload = () => {
         this.createForm.media = reader.result;
       };
@@ -253,7 +254,16 @@ export default {
       }
     },
     sendNFT() {
-      console.log('send')
+      console.log('send');
+      window.contract.nft_transfer({
+        token_id: this.selectedNFT.token_id.toString(),
+        receiver_id: this.sendToNearAddress,
+        approval_id: window.accountId
+      }).then(result => {
+        console.log(result);
+      }).catch(err => {
+        console.log('Error!', err);
+      });
     },
     logout: logout,
   },
