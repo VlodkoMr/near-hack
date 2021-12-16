@@ -11,6 +11,8 @@
       </h1>
 
       <div v-if="!isAddScreen">
+        <Preloader color="grey" v-if="!ready"/>
+
         <div class="cards" v-if="ready && myItems.length">
           <b-card title="Card Title"
                   v-for="item in myItems"
@@ -92,7 +94,8 @@ export default {
   },
 
   components: {
-    Loading
+    Loading,
+    Preloader,
   },
 
   data: function () {
