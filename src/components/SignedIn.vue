@@ -158,25 +158,27 @@ export default {
     },
     addNewItem() {
       this.createForm.isUpload = true;
-      // axios.post('https://api.coindesk.com/v1/bpi/currentprice.json', {
-      //   data: this.createForm
-      // }).then(response => {
+      axios.post('https://api.coindesk.com/v1/bpi/currentprice.json', {
+        data: this.createForm
+      }).then(response => {
+        const hash = response.data.hash;
+        if (hash) {
+          const checkInterval = setInterval(() => {
+            axios.get(`https://api.coindesk.com/v1/bpi/currentprice.json?hash=${hash}`).then(response => {
+              // console.log(response.data);
+              if (response.data.finished) {
+                clearInterval(checkInterval);
 
-      //   console.log(response.data);
-      // });
-      const hash = '123123123123123123123';
+                this.createForm.isUpload = false;
+                this.createNFT(hash);
+              }
+            });
+          }, 2000);
+        } else {
+          alert('Server error: no hash');
+        }
+      });
 
-      const checkInterval = setInterval(() => {
-        axios.get(`https://api.coindesk.com/v1/bpi/currentprice.json?hash=${hash}`).then(response => {
-          // console.log(response.data);
-          if (response.data.finished) {
-            clearInterval(checkInterval);
-
-            this.createForm.isUpload = false;
-            this.createNFT(hash);
-          }
-        });
-      }, 2000);
     },
 
     async createNFT(hash, mediaUrl) {
