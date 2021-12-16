@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="text-center mt-3">
+    <div class="mt-3">
       <img src="../assets/logo.svg" alt="" height="60">
     </div>
     <div class="row">
@@ -39,7 +39,7 @@ export default {
 
 <style>
 h3 {
-  margin-top: 15% !important;
+  margin-top: 12% !important;
 }
 
 .sign-in {

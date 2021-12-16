@@ -1,15 +1,16 @@
 <template>
   <div>
-    <header>
+    <header class="mb-5">
       <div class="container">
-        <span>{{ accountId }}</span>
-        <button @click="isAddScreen=true" class="btn btn-primary m-2">+ Add Item</button>
-        <button class="btn btn-outline-danger" v-on:click="logout">Sign out</button>
+        <img src="../assets/logo.svg" alt="" height="40" class="mt-2">
+        <div class="text-right">
+          <span class="username">{{ accountId }}</span>
+          <button @click="isAddScreen=true" class="btn btn-primary m-2">New Item</button>
+          <button class="btn btn-outline-danger" v-on:click="logout">Sign out</button>
+        </div>
       </div>
     </header>
     <main class="container">
-      <h1 class="text-center mb-5">NgArt - My Gallery</h1>
-
       <div v-if="!isAddScreen">
         <Preloader color="grey" v-if="!ready"/>
 
@@ -24,15 +25,16 @@
         </div>
 
         <div v-if="ready && !myItems.length" class="text-center">
-          *You don't have NgArt, but you can
+          *You don't have StringArt, but you can
           <span class="link-primary text-decoration-underline cursor-pointer" @click="isAddScreen=true">Create New Item</span>
         </div>
       </div>
 
       <div v-if="isAddScreen" class="form-block">
         <form @submit.prevent="addNewItem" class="col-4 offset-4">
+          <h4 class="text-center mb-3">Create new StringArt</h4>
           <label class="form-group d-block mb-2">
-            <span class="form-label">Title<sup>*</sup></span>
+            <span class="form-label">Art Title<sup>*</sup></span>
             <input type="text" required name="title" class="form-control" v-model="createForm.title"/>
           </label>
           <label class="form-group d-block mb-2">
@@ -41,7 +43,7 @@
           </label>
 
           <div class="form-group d-block mb-2">
-            <span class="form-label">Size (cm)<sup>*</sup></span>
+            <span class="form-label">Art Size (cm)<sup>*</sup></span>
             <div class="input-group">
               <label class="input-group-prepend">
                 <input type="number" placeholder="Width"
@@ -72,7 +74,6 @@
           <loading :active="createForm.isUpload" :can-cancel="true"/>
         </div>
       </div>
-
 
       <button @click="tmpCreateNFT" class="btn btn-danger mt-5">Generate NFT (TMP)</button>
     </main>
@@ -175,8 +176,12 @@ export default {
             });
           }, 2000);
         } else {
+          this.createForm.isUpload = false;
           alert('Server error: no hash');
         }
+      }).catch(err => {
+        this.createForm.isUpload = false;
+        alert(err.message);
       });
     },
     tmpCreateNFT() {
