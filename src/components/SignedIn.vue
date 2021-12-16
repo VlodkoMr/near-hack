@@ -1,14 +1,14 @@
 <template>
   <div>
     <header>
-      <span>{{ accountId }}</span>
-      <button @click="isAddScreen=true" class="btn btn-primary m-2">+ Add Item</button>
-      <button class="btn btn-outline-danger" v-on:click="logout">Sign out</button>
+      <div class="container">
+        <span>{{ accountId }}</span>
+        <button @click="isAddScreen=true" class="btn btn-primary m-2">+ Add Item</button>
+        <button class="btn btn-outline-danger" v-on:click="logout">Sign out</button>
+      </div>
     </header>
-    <main>
-      <h1 class="text-center mb-5">
-        NgArt - My Gallery
-      </h1>
+    <main class="container">
+      <h1 class="text-center mb-5">NgArt - My Gallery</h1>
 
       <div v-if="!isAddScreen">
         <Preloader color="grey" v-if="!ready"/>
@@ -22,9 +22,10 @@
             <b-button href="#" variant="primary">Create Phisical Item</b-button>
           </b-card>
         </div>
-        <div class="placeholder" v-if="ready && !myItems.length">
-          *You don't have NFT Art, but you can
-          <button>Create New</button>
+
+        <div v-if="ready && !myItems.length" class="text-center">
+          *You don't have NgArt, but you can
+          <span class="link-primary text-decoration-underline cursor-pointer" @click="isAddScreen=true">Create New Item</span>
         </div>
       </div>
 
@@ -193,9 +194,8 @@ export default {
         title: this.createForm.title.toString(),
         media: mediaUrl,
         copies: 1,
-        // extra: coordinates,
+        extra: coordinates,
       };
-      console.log(coordinates)
 
       try {
         console.log(token_metadata, window.accountId)
@@ -217,45 +217,5 @@ export default {
     },
     logout: logout,
   },
-
-  //
-  // saveGreeting: async function (event) {
-  //   // fired on form submit button used to update the greeting
-  //
-  //   // disable the form while the value gets updated on-chain
-  //   this.$refs.fieldset.disabled = true
-  //
-  //   try {
-  //
-  //     // make an update call to the smart contract
-  //     await window.contract.set_greeting({
-  //       // pass the new greeting
-  //       message: this.newGreeting,
-  //     })
-  //   } catch (e) {
-  //     alert(
-  //       "Something went wrong! " +
-  //         "Maybe you need to sign out and back in? " +
-  //         "Check your browser console for more info."
-  //     )
-  //     throw e //re-throw
-  //   } finally {
-  //     // re-enable the form, whether the call succeeded or failed
-  //     this.$refs.fieldset.disabled = false
-  //   }
-  //
-  //   // update savedGreeting with persisted value
-  //   this.savedGreeting = this.newGreeting
-  //
-  //   this.notificationVisible = true //show new notification
-  //
-  //   // remove Notification again after css animation completes
-  //   // this allows it to be shown again next time the form is submitted
-  //   setTimeout(() => {
-  //     this.notificationVisible = false
-  //   }, 11000)
-  //
-  // },
-
 }
 </script>

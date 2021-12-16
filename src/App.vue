@@ -1,5 +1,5 @@
 <template>
-  <div id="root" class="container">
+  <div id="root">
     <SignedOut v-show="!isSignedIn"/>
     <SignedIn v-show="isSignedIn"/>
     <footer class="text-center footer">
@@ -39,4 +39,3 @@ export default {
   },
 }
 </script>
-

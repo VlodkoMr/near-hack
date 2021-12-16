@@ -1,21 +1,25 @@
 <template>
-  <main>
-    <header>
-      <h1 class="text-center mb-5 mt-3">NgArt</h1>
-    </header>
-
-    <div class="text-center">
-      <p>
-        Project description...
-      </p>
-      <p class="auth-btn">
-        <button v-on:click="login" class="btn btn-primary">Sign in</button>
-      </p>
-      <p>
-        Some images...
-      </p>
+  <div class="container">
+    <div class="text-center mt-3">
+      <img src="../assets/logo.svg" alt="" height="60">
     </div>
-  </main>
+    <div class="row">
+      <div class="col-6">
+        <h3 class="mb-3">Platform for you to create <span class="text-other">StringArt</span> NFTs</h3>
+        <p>The first cross-chain ecosystem where you can manifest digital NFTs in the physical world. Own unique NFTs from your favorite brands, projects,
+          influencers and artists, which you can convert into a wide range of products, complete with Proof of Authenticity.
+        </p>
+        <p class="auth-btn">
+          <button v-on:click="login" class="btn btn-primary sign-in mt-2">Sign In</button>
+        </p>
+      </div>
+      <div class="col-6">
+
+      </div>
+    </div>
+
+
+  </div>
 </template>
 
 <script>
@@ -32,3 +36,18 @@ export default {
   },
 }
 </script>
+
+<style>
+h3 {
+  margin-top: 15% !important;
+}
+
+.sign-in {
+  padding: 9px 30px !important;
+  border-radius: 8px !important;
+}
+
+.text-other {
+  color: #974CBA !important;
+}
+</style>
