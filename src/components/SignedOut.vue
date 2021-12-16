@@ -1,17 +1,20 @@
 <template>
   <main>
-    <h1>NgArt</h1>
-    <p>
-      Project description...
-    </p>
-    <p class="auth-btn">
-      <button v-on:click="login">Sign in</button>
-    </p>
-    <p>
-      Some images...
-    </p>
-    <hr>
-    <p>Footer</p>
+    <header>
+      <h1 class="text-center mb-5 mt-3">NgArt</h1>
+    </header>
+
+    <div class="text-center">
+      <p>
+        Project description...
+      </p>
+      <p class="auth-btn">
+        <button v-on:click="login" class="btn btn-primary">Sign in</button>
+      </p>
+      <p>
+        Some images...
+      </p>
+    </div>
   </main>
 </template>
 

@@ -67,12 +67,13 @@
             <button type="submit" class="btn btn-primary">Create</button>
           </div>
         </form>
-
         <div>
           <loading :active="createForm.isUpload" :can-cancel="true"/>
         </div>
       </div>
 
+
+      <button @click="tmpCreateNFT" class="btn btn-danger mt-5">Generate NFT (TMP)</button>
     </main>
 
   </div>
@@ -81,6 +82,7 @@
 <script>
 import {logout} from "../utils"
 import axios from 'axios';
+import Big from 'big.js';
 import Preloader from './Preloader.vue';
 import Loading from 'vue-loading-overlay';
 
@@ -92,19 +94,16 @@ export default {
       this.retrieveMyItems()
     }
   },
-
   components: {
     Loading,
     Preloader,
   },
-
   data: function () {
     return {
       isAddScreen: false,
       createForm: {
         title: "",
         media: "",
-        coord: "",
         width: 30,
         height: 30,
         border: 2,
@@ -114,7 +113,6 @@ export default {
       myItems: [],
     }
   },
-
   computed: {
     isSignedIn() {
       return window.walletConnection ? window.walletConnection.isSignedIn() : false
@@ -129,7 +127,6 @@ export default {
       return window.networkId
     },
   },
-
   methods: {
     retrieveMyItems() {
       this.isAddScreen = false;
@@ -154,7 +151,6 @@ export default {
     resetForm() {
       this.createForm.title = '';
       this.createForm.media = '';
-      this.createForm.coord = '';
     },
     addNewItem() {
       this.createForm.isUpload = true;
@@ -162,15 +158,18 @@ export default {
         data: this.createForm
       }).then(response => {
         const hash = response.data.hash;
+        const mediaUrl = response.data.mediaUrl;
+
         if (hash) {
           const checkInterval = setInterval(() => {
             axios.get(`https://api.coindesk.com/v1/bpi/currentprice.json?hash=${hash}`).then(response => {
               // console.log(response.data);
               if (response.data.finished) {
+                const coordinates = response.data.json;
                 clearInterval(checkInterval);
 
                 this.createForm.isUpload = false;
-                this.createNFT(hash);
+                this.createNFT(hash, mediaUrl, coordinates);
               }
             });
           }, 2000);
@@ -178,25 +177,39 @@ export default {
           alert('Server error: no hash');
         }
       });
-
     },
-
-    async createNFT(hash, mediaUrl) {
+    tmpCreateNFT() {
+      const json = [123, 1232, 435, 346, 6, 456, 46, 23, 43, 4, 32, 3, 53, 45, 345, 23];
+      this.createForm.title = 'test 1';
+      this.createNFT(
+        "12345678",
+        "https://forklog.com/wp-content/uploads/near2.png",
+        JSON.stringify(json)
+      );
+    },
+    async createNFT(hash, mediaUrl, coordinates) {
       const token_metadata = {
-        title: this.createForm.title,
+        description: "Just Random NFT description",
+        title: this.createForm.title.toString(),
         media: mediaUrl,
         copies: 1,
-        extra: this.createForm.coord
+        // extra: coordinates,
       };
+      console.log(coordinates)
 
       try {
+        console.log(token_metadata, window.accountId)
+        const GAS = Big(3).times(10 ** 13).toFixed();
+        const PAYMENT = Big(0.1).times(10 ** 24).toFixed();
+
         await window.contract.nft_mint({
           token_id: hash,
           receiver_id: window.accountId,
           token_metadata
-        })
+        }, GAS, PAYMENT);
       } catch (e) {
         alert("Something went wrong!");
+        throw e
       } finally {
         console.log('Finish');
         this.retrieveMyItems();
