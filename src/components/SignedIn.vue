@@ -254,12 +254,13 @@ export default {
       }
     },
     sendNFT() {
-      console.log('send');
+      const GAS = Big(3).times(10 ** 13).toFixed();
+      const PAYMENT = 1;
+
       window.contract.nft_transfer({
         token_id: this.selectedNFT.token_id.toString(),
         receiver_id: this.sendToNearAddress,
-        approval_id: window.accountId
-      }).then(result => {
+      }, GAS, PAYMENT).then(result => {
         console.log(result);
       }).catch(err => {
         console.log('Error!', err);
