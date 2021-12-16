@@ -10,6 +10,9 @@
         </div>
       </div>
     </header>
+
+    <!--    <b-button v-b-modal.modal-1>Launch demo modal</b-button>-->
+
     <main class="container">
       <div v-if="!isAddScreen">
         <h4 class="text-center mb-4">My StringArt</h4>
@@ -20,11 +23,14 @@
                   v-for="item in myItems"
                   :key="item.token_id"
                   :img-src="item.metadata.media">
-            <!--            <p>{{ item.description }}</p>-->
-            <p class="card-description">20x20x3</p>
+            <p class="card-description" v-if="item.description">Size: {{ item.description }}</p>
             <div class="card-buttons">
-              <b-button href="#" variant="secondary btn-sm">Send NFT</b-button>
-              <b-button href="#" variant="primary btn-sm">Create Phisical Item</b-button>
+              <b-button href="#" variant="secondary btn-sm" v-b-modal.modal-send @click="selectedNFT=item">
+                Send NFT
+              </b-button>
+              <b-button href="#" variant="primary btn-sm" v-b-modal.modal-create @click="selectedNFT=item">
+                Create Physical Item
+              </b-button>
             </div>
           </b-card>
         </div>
@@ -82,10 +88,27 @@
           <loading :active="createForm.isUpload" :can-cancel="true"/>
         </div>
       </div>
-
-      <button @click="tmpCreateNFT" class="btn btn-danger mt-5">Generate NFT (TMP)</button>
+      <!--      <button @click="tmpCreateNFT" class="btn btn-danger mt-5">Generate NFT (TMP)</button>-->
     </main>
 
+
+    <b-modal id="modal-send" title="Send NFT" hide-footer>
+      <!--      {{ selectedNFT }}-->
+      <div class="p-5">
+        <p>Send To Address:</p>
+        <b-input-group class="mt-3">
+          <input type="text" class="form-control" placeholder="NEAR Address"/>
+          <b-input-group-append>
+            <b-button variant="primary d-block send-btn">Send</b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </div>
+    </b-modal>
+
+    <b-modal id="modal-create" title="Create Physical Item">
+      <p>Redeem your NFT item to the form of physical product!</p>
+      {{ selectedNFT }}
+    </b-modal>
   </div>
 </template>
 
@@ -120,6 +143,7 @@ export default {
         isUpload: false
       },
       ready: false,
+      selectedNFT: "",
       myItems: [],
     }
   },
@@ -227,6 +251,9 @@ export default {
         console.log('Finish');
         this.retrieveMyItems();
       }
+    },
+    sendNFT() {
+      console.log('send')
     },
     logout: logout,
   },
