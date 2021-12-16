@@ -53,13 +53,13 @@ header .container {
 }
 
 .input-group-prepend, .input-group-append {
-    width: 90px;
+    width: 28%;
     text-align: center;
 }
 
 .divider {
     display: inline-block;
-    width: 20px;
+    width: 8.2%;
     line-height: 34px;
     text-align: center;
 }
