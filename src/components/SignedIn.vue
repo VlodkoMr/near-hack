@@ -318,7 +318,7 @@ export default {
           }, 3000);
 
           const checkMediaInterval = setInterval(() => {
-            axios.get(`${VUE_APP_SERVER_IP}?hash=${hash}`).then(response => {
+            axios.get(`${VUE_APP_SERVER_IP}/imgfull/${hash}`).then(response => {
               // console.log(response.data);
               if (response.data.finished) {
                 resultImage = response.data.mediaUrl;
