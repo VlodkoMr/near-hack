@@ -19,7 +19,15 @@ header {
 
 header .container {
     display: grid;
-    grid-template-columns: 20% 80%;
+    grid-template-columns: 50% 50%;
+}
+
+.ml-5 {
+    margin-left: 5em;
+}
+
+.ml-1 {
+    margin-left: 1em;
 }
 
 .cards {
@@ -138,4 +146,9 @@ header .container {
 .send-btn {
     padding: 7px 24px !important;
     border-radius: 0 8px 8px 0 !important;
+}
+
+.order-sent {
+    text-align: center;
+    padding: 40px 0;
 }

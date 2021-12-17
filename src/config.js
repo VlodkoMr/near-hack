@@ -1,4 +1,4 @@
-const CONTRACT_NAME = process.env.VUE_APP_CONTRACT_NAME ||'near-hack'
+const CONTRACT_NAME = process.env.VUE_APP_CONTRACT_NAME || 'near-hack'
 
 function getConfig(env) {
   switch (env) {

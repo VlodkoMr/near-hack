@@ -2,7 +2,19 @@
   <div>
     <header class="mb-5">
       <div class="container">
-        <img src="../assets/logo.svg" alt="" height="40" class="mt-2">
+        <div>
+          <img src="../assets/logo.svg" alt="" height="40" class="mt-2">
+          <span class="btn btn-link ml-5"
+                @click="openArtPage"
+                :class="{'text-info': activePage==='art', 'text-white': activePage!=='art'}">
+            My StringArt
+          </span>
+          <span class="btn btn-link ml-1"
+                @click="openOrdersPage"
+                :class="{'text-info': activePage==='orders', 'text-white': activePage!=='orders'}">
+            My Orders
+          </span>
+        </div>
         <div class="text-right">
           <span class="username">{{ accountId }}</span>
           <button @click="isAddScreen=true" class="btn btn-outline-primary m-2">New Item</button>
@@ -11,9 +23,7 @@
       </div>
     </header>
 
-    <!--    <b-button v-b-modal.modal-1>Launch demo modal</b-button>-->
-
-    <main class="container">
+    <main class="container" v-if="activePage==='art'">
       <div v-if="!isAddScreen">
         <h4 class="text-center mb-4">My StringArt</h4>
         <Preloader color="grey" v-if="!ready"/>
@@ -28,7 +38,7 @@
               <b-button href="#" variant="secondary btn-sm" v-b-modal.modal-send @click="selectedNFT=item">
                 Send NFT
               </b-button>
-              <b-button href="#" variant="primary btn-sm" v-b-modal.modal-create @click="selectedNFT=item">
+              <b-button href="#" variant="primary btn-sm" v-b-modal.modal-create @click="selectedNFT=item; itemCreated=null">
                 Create Physical Item
               </b-button>
             </div>
@@ -79,6 +89,12 @@
             </div>
           </div>
 
+          <label class="form-group d-block mb-2">
+            <span class="form-label">Style<sup>*</sup></span>
+            <input type="number" step="0.1" min="0.7" max="3.5" required
+                   name="style" class="form-control" v-model="createForm.style"/>
+          </label>
+
           <div class="form-buttons mt-4">
             <button type="button" @click="isAddScreen=false" class="btn btn-outline-secondary">Cancel</button>
             <button type="submit" class="btn btn-primary">Create</button>
@@ -89,26 +105,74 @@
         </div>
       </div>
       <!--      <button @click="tmpCreateNFT" class="btn btn-danger mt-5">Generate NFT (TMP)</button>-->
+
+      <b-modal id="modal-send" title="Send NFT" hide-footer>
+        <div class="p-5">
+          <p>Send NFT to NEAR Account:</p>
+          <b-input-group class="mt-3">
+            <input type="text" class="form-control" placeholder="NEAR Address" v-model="sendToNearAddress"/>
+            <b-input-group-append>
+              <b-button variant="primary d-block send-btn" @click="sendNFT">Send</b-button>
+            </b-input-group-append>
+          </b-input-group>
+        </div>
+      </b-modal>
+
+      <b-modal id="modal-create" title="Create Physical Item" hide-footer>
+        <form @submit.prevent="createPhysicalItem" v-if="!itemCreated">
+          <p class="text-center mt-3 mb-4">Redeem your NFT item to the form of physical product!</p>
+          <label class="form-group d-block mb-2">
+            <span class="form-label text-dark">Your Name<sup>*</sup></span>
+            <input type="text" required name="name" class="form-control" v-model="createItemForm.name"/>
+          </label>
+          <label class="form-group d-block mb-2">
+            <span class="form-label text-dark">Phone<sup>*</sup></span>
+            <input type="text" required name="phone" class="form-control" v-model="createItemForm.phone"/>
+          </label>
+          <label class="form-group d-block mb-2">
+            <span class="form-label text-dark">Address<sup>*</sup></span>
+            <textarea v-model="createItemForm.address" class="form-control"></textarea>
+          </label>
+          <div class="mt-4 d-flex" style="justify-content: space-between">
+            <button class="btn btn-outline-secondary" type="button" @click="$bvModal.hide('modal-create')">Cancel</button>
+            <button class="btn btn-primary" type="submit">Create Order</button>
+          </div>
+        </form>
+
+        <div v-if="itemCreated" class="order-sent">
+          <p>Your order successfully sent!</p>
+          <p><b>Order Number: {{ itemCreated }}</b></p>
+          <button class="btn btn-outline-secondary" type="button" @click="$bvModal.hide('modal-create')">Close</button>
+        </div>
+
+      </b-modal>
     </main>
 
 
-    <b-modal id="modal-send" title="Send NFT" hide-footer>
-      <!--      {{ selectedNFT }}-->
-      <div class="p-5">
-        <p>Send NFT to NEAR Account:</p>
-        <b-input-group class="mt-3">
-          <input type="text" class="form-control" placeholder="NEAR Address" v-model="sendToNearAddress"/>
-          <b-input-group-append>
-            <b-button variant="primary d-block send-btn" @click="sendNFT">Send</b-button>
-          </b-input-group-append>
-        </b-input-group>
-      </div>
-    </b-modal>
+    <main class="container" v-if="activePage==='orders'">
+      <h4 class="text-center mb-4">My Orders</h4>
+      <Preloader color="grey" v-if="!ready"/>
 
-    <b-modal id="modal-create" title="Create Physical Item">
-      <p>Redeem your NFT item to the form of physical product!</p>
-      {{ selectedNFT }}
-    </b-modal>
+      <div v-if="ready && !myOrders.length" class="text-center">
+        <img src="../assets/noItems.png" alt="" width="400">
+        <div class="mt-4">
+          You don't have Orders.
+        </div>
+      </div>
+
+      <table class="table" v-if="ready && myOrders.length">
+        <tr>
+          <th>Order ID</th>
+          <th>NFT</th>
+          <th>Details</th>
+        </tr>
+        <tr v-for="order of myOrders" :key="order.id">
+          <td>{{ order.id }}</td>
+          <td><img :src="order.media" height="40" alt="..."></td>
+          <td>{{ order.data }}</td>
+        </tr>
+      </table>
+    </main>
   </div>
 </template>
 
@@ -119,12 +183,14 @@ import Big from 'big.js';
 import Preloader from './Preloader.vue';
 import Loading from 'vue-loading-overlay';
 
+const VUE_APP_SERVER_IP = 'http://127.0.0.1/'
+
 export default {
   name: "SignedIn",
 
   beforeMount() {
     if (this.isSignedIn) {
-      this.retrieveMyItems()
+      this.openArtPage()
     }
   },
   components: {
@@ -133,19 +199,29 @@ export default {
   },
   data: function () {
     return {
+      activePage: "art",
       isAddScreen: false,
+      itemCreated: null,
       createForm: {
         title: "",
         media: "",
         width: 30,
         height: 30,
         border: 2,
+        style: 1,
         isUpload: false
+      },
+      createItemForm: {
+        name: "",
+        phone: "",
+        address: "",
       },
       ready: false,
       selectedNFT: {},
-      sendToNearAddress: "vlodkow.testnet",
+      sendToNearAddress: "",
       myItems: [],
+      myItemIds: [],
+      myOrders: [],
     }
   },
   computed: {
@@ -163,10 +239,44 @@ export default {
     },
   },
   methods: {
+    openArtPage() {
+      this.activePage = 'art';
+      this.retrieveMyItems();
+    },
+    openOrdersPage() {
+      this.activePage = 'orders';
+      this.retrieveMyOrders();
+    },
+    retrieveMyOrders() {
+      this.ready = false;
+      window.contract.all_orders({account_id: window.accountId}).then(items => {
+        this.myOrders = [];
+        if (items) {
+          for (const [key, value] of Object.entries(items)) {
+            console.log(key, value, this.myItemIds);
+
+            // if (this.myItemIds.keys().indexOf(key) !== -1) {
+            // this.myOrders.push({
+            //   'id': key,
+            //   'media': '',
+            //   'data': value
+            // });
+            // }
+          }
+        }
+
+        this.ready = true;
+      })
+    },
     retrieveMyItems() {
+      this.ready = false;
       this.isAddScreen = false;
       window.contract.nft_tokens_for_owner({account_id: window.accountId}).then(items => {
         this.myItems = items;
+        this.myItemIds = {};
+        this.myItems.forEach(nft => {
+          this.myItemIds[nft.token_id] = nft.metadata.media;
+        });
         this.ready = true;
       })
     },
@@ -189,18 +299,17 @@ export default {
     },
     addNewItem() {
       this.createForm.isUpload = true;
-      axios.post('https://api.coindesk.com/v1/bpi/currentprice.json', {
+      axios.post(`${VUE_APP_SERVER_IP}`, {
         data: this.createForm
       }).then(response => {
         const hash = response.data.hash;
-        const mediaUrl = response.data.mediaUrl;
-
         if (hash) {
           const checkInterval = setInterval(() => {
-            axios.get(`https://api.coindesk.com/v1/bpi/currentprice.json?hash=${hash}`).then(response => {
+            axios.get(`${VUE_APP_SERVER_IP}?hash=${hash}`).then(response => {
               // console.log(response.data);
               if (response.data.finished) {
-                const coordinates = response.data.json;
+                const coordinates = response.data.jsonFile;
+                const mediaUrl = response.data.mediaUrl;
                 clearInterval(checkInterval);
 
                 this.createForm.isUpload = false;
@@ -217,15 +326,15 @@ export default {
         alert(err.message);
       });
     },
-    tmpCreateNFT() {
-      const json = [123, 1232, 435, 346, 6, 456, 46, 23, 43, 4, 32, 3, 53, 45, 345, 23];
-      this.createForm.title = 'test 2';
-      this.createNFT(
-        "123456789",
-        "https://www.dhresource.com/0x0/f2/albu/g11/M01/87/FB/rBNaFl8f-beARRmbAAKdNBeOmZc224.jpg/lover-hands-graffiti-art-street-art-canvas.jpg",
-        JSON.stringify(json)
-      );
-    },
+    // tmpCreateNFT() {
+    //   const json = [123, 1232, 435, 346, 6, 456, 46, 23, 43, 4, 32, 3, 53, 45, 345, 23];
+    //   this.createForm.title = 'test 2';
+    //   this.createNFT(
+    //     "123456789",
+    //     "https://www.dhresource.com/0x0/f2/albu/g11/M01/87/FB/rBNaFl8f-beARRmbAAKdNBeOmZc224.jpg/lover-hands-graffiti-art-street-art-canvas.jpg",
+    //     JSON.stringify(json)
+    //   );
+    // },
     async createNFT(hash, mediaUrl, coordinates) {
       const token_metadata = {
         title: this.createForm.title,
@@ -236,7 +345,7 @@ export default {
       };
 
       try {
-        console.log(token_metadata, window.accountId)
+        // console.log(token_metadata, window.accountId)
         const GAS = Big(3).times(10 ** 13).toFixed();
         const PAYMENT = Big(0.1).times(10 ** 24).toFixed();
 
@@ -262,6 +371,21 @@ export default {
         receiver_id: this.sendToNearAddress,
       }, GAS, PAYMENT).then(result => {
         console.log(result);
+      }).catch(err => {
+        console.log('Error!', err);
+      });
+    },
+    createPhysicalItem() {
+      const GAS = Big(3).times(10 ** 13).toFixed();
+
+      window.contract.create_physical_item({
+        token_id: this.selectedNFT.token_id.toString(),
+        name: this.createItemForm.name,
+        phone: this.createItemForm.phone,
+        address: this.createItemForm.address,
+      }, GAS).then(result => {
+        console.log('result', result);
+        this.itemCreated = result;
       }).catch(err => {
         console.log('Error!', err);
       });
