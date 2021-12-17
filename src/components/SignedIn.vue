@@ -376,7 +376,6 @@ export default {
         alert("Something went wrong!");
         throw e
       } finally {
-        console.log('Finish');
         this.retrieveMyItems();
       }
     },

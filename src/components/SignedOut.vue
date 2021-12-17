@@ -20,7 +20,7 @@
           </p>
         </div>
         <div class="col-6">
-          <img src="../assets/sample.png" alt="" style="width: 100%; margin-top: 5%;">
+          <img src="../assets/sample.png" alt="" style="width: 100%; margin-top: 15%;">
         </div>
       </div>
     </div>
@@ -45,7 +45,7 @@ export default {
 
 <style>
 h3 {
-  margin-top: 15% !important;
+  margin-top: 25% !important;
 }
 
 .sign-in {
