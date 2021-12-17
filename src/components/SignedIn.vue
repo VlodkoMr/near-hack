@@ -26,7 +26,7 @@
     <main class="container" v-if="activePage==='art'">
       <div v-if="!isAddScreen">
         <h4 class="text-center mb-4">My StringArt</h4>
-        <Preloader color="grey" v-if="!ready"/>
+        <Preloader color="grey" scale="0.7" v-if="!ready"/>
 
         <div class="cards" v-if="ready && myItems.length">
           <b-card title="Card Title"
@@ -130,21 +130,27 @@
           </div>
 
           <p class="text-center mt-3 mb-4">Create order and we will print it for you:</p>
-          <label class="form-group d-block mb-2">
-            <span class="form-label text-dark">Your Name<sup>*</sup></span>
-            <input type="text" required name="name" class="form-control" v-model="createItemForm.name"/>
-          </label>
-          <label class="form-group d-block mb-2">
-            <span class="form-label text-dark">Phone<sup>*</sup></span>
-            <input type="text" required name="phone" class="form-control" v-model="createItemForm.phone"/>
-          </label>
-          <label class="form-group d-block mb-2">
-            <span class="form-label text-dark">Address<sup>*</sup></span>
-            <textarea v-model="createItemForm.address" class="form-control"></textarea>
-          </label>
-          <div class="mt-4 d-flex" style="justify-content: space-between">
-            <button class="btn btn-outline-secondary" type="button" @click="$bvModal.hide('modal-create')">Cancel</button>
-            <button class="btn btn-primary" type="submit">Create Order</button>
+          <div v-if="!submitOrder">
+            <label class="form-group d-block mb-2">
+              <span class="form-label text-dark">Your Name<sup>*</sup></span>
+              <input type="text" required name="name" class="form-control" v-model="createItemForm.name"/>
+            </label>
+            <label class="form-group d-block mb-2">
+              <span class="form-label text-dark">Phone<sup>*</sup></span>
+              <input type="text" required name="phone" class="form-control" v-model="createItemForm.phone"/>
+            </label>
+            <label class="form-group d-block mb-2">
+              <span class="form-label text-dark">Address<sup>*</sup></span>
+              <textarea v-model="createItemForm.address" class="form-control"></textarea>
+            </label>
+            <div class="mt-4 d-flex" style="justify-content: space-between">
+              <button class="btn btn-outline-secondary" type="button" @click="$bvModal.hide('modal-create')">Cancel</button>
+              <button class="btn btn-primary" type="submit">Create Order</button>
+            </div>
+          </div>
+
+          <div v-if="submitOrder">
+            <Preloader color="grey" scale="0.5"/>
           </div>
         </form>
 
@@ -160,7 +166,7 @@
 
     <main class="container" v-if="activePage==='orders'">
       <h4 class="text-center mb-4">My Orders</h4>
-      <Preloader color="grey" v-if="!ready"/>
+      <Preloader color="grey" scale="0.7" v-if="!ready"/>
 
       <div v-if="ready && !myOrders.length" class="text-center">
         <img src="../assets/noItems.png" alt="" width="400">
@@ -212,6 +218,7 @@ export default {
     return {
       activePage: "art",
       isAddScreen: false,
+      submitOrder: false,
       itemCreated: null,
       createForm: {
         title: "",
@@ -411,6 +418,7 @@ export default {
       });
     },
     createPhysicalItem() {
+      this.submitOrder = true;
       const GAS = Big(3).times(10 ** 13).toFixed();
 
       window.contract.create_physical_item({
@@ -421,6 +429,7 @@ export default {
       }, GAS).then(result => {
         console.log('result', result);
         this.itemCreated = result;
+        this.submitOrder = false;
       }).catch(err => {
         console.log('Error!', err);
       });
