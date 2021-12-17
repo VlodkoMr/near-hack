@@ -183,7 +183,7 @@ import Big from 'big.js';
 import Preloader from './Preloader.vue';
 import Loading from 'vue-loading-overlay';
 
-const VUE_APP_SERVER_IP = 'http://127.0.0.1/'
+const VUE_APP_SERVER_IP = 'http://127.0.0.1'
 
 export default {
   name: "SignedIn",
@@ -253,15 +253,16 @@ export default {
         this.myOrders = [];
         if (items) {
           for (const [key, value] of Object.entries(items)) {
-            console.log(key, value, this.myItemIds);
-
-            // if (this.myItemIds.keys().indexOf(key) !== -1) {
-            // this.myOrders.push({
-            //   'id': key,
-            //   'media': '',
-            //   'data': value
-            // });
-            // }
+            let idList = Object.keys(this.myItemIds);
+            if (idList.indexOf(key) !== -1) {
+              let currentKey = idList.indexOf(key);
+              console.log(idList[currentKey])
+              this.myOrders.push({
+                'id': key,
+                'media': idList[currentKey],
+                'data': value
+              });
+            }
           }
         }
 
@@ -299,24 +300,41 @@ export default {
     },
     addNewItem() {
       this.createForm.isUpload = true;
-      axios.post(`${VUE_APP_SERVER_IP}`, {
+      axios.post(`${VUE_APP_SERVER_IP}/newnft`, {
         data: this.createForm
       }).then(response => {
         const hash = response.data.hash;
         if (hash) {
-          const checkInterval = setInterval(() => {
+          let resultCoordinates = null;
+          let resultImage = null;
+
+          const checkCoordInterval = setInterval(() => {
+            axios.get(`${VUE_APP_SERVER_IP}/coordinates/${hash}`).then(response => {
+              if (response.data) {
+                resultCoordinates = response.data.jsonFile;
+                clearInterval(checkCoordInterval);
+              }
+            });
+          }, 3000);
+
+          const checkMediaInterval = setInterval(() => {
             axios.get(`${VUE_APP_SERVER_IP}?hash=${hash}`).then(response => {
               // console.log(response.data);
               if (response.data.finished) {
-                const coordinates = response.data.jsonFile;
-                const mediaUrl = response.data.mediaUrl;
-                clearInterval(checkInterval);
-
-                this.createForm.isUpload = false;
-                this.createNFT(hash, mediaUrl, coordinates);
+                resultImage = response.data.mediaUrl;
+                clearInterval(checkMediaInterval);
               }
             });
-          }, 2000);
+          }, 3000);
+
+          const finalInterval = setInterval(() => {
+            if (resultCoordinates && resultImage) {
+              this.createNFT(hash, resultImage, resultCoordinates);
+              this.createForm.isUpload = false;
+              clearInterval(finalInterval);
+            }
+          }, 100);
+
         } else {
           this.createForm.isUpload = false;
           alert('Server error: no hash');
