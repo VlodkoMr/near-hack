@@ -3,6 +3,10 @@ html {
     background-color: #25253F;
 }
 
+body, html, #root, #sign-in {
+    height: 100%;
+}
+
 body, .container {
     background: transparent !important;
     color: #FFF;
