@@ -7,16 +7,16 @@
       <div class="col-6">
         <h3 class="mb-3">Platform for you to create <span class="text-other">StringArt</span> NFTs</h3>
         <p>
-          The first cross-chain ecosystem where you can manifest digital NFTs in the physical world.
-          Own unique NFTs from your favorite brands, projects,
-          influencers and artists, which you can convert into a wide range of products, complete with Proof of Authenticity.
+          The first platform where you can manifest digital-art NFTs in the physical world. <br>
+          Own unique NFTs from any your image or photo, which you can convert into a real String Art that will be
+          automatically printed and delivered to you in few days.
         </p>
         <p class="auth-btn">
           <button v-on:click="login" class="btn btn-primary sign-in mt-2">Sign In</button>
         </p>
       </div>
       <div class="col-6">
-
+        <img src="../assets/sample.png" alt="" style="width: 100%; margin-top: 5%;">
       </div>
     </div>
 
@@ -41,7 +41,7 @@ export default {
 
 <style>
 h3 {
-  margin-top: 12% !important;
+  margin-top: 15% !important;
 }
 
 .sign-in {

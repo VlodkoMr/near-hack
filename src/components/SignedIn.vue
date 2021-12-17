@@ -109,12 +109,14 @@
       <b-modal id="modal-send" title="Send NFT" hide-footer>
         <div class="p-5">
           <p>Send NFT to NEAR Account:</p>
-          <b-input-group class="mt-3">
-            <input type="text" class="form-control" placeholder="NEAR Address" v-model="sendToNearAddress"/>
-            <b-input-group-append>
-              <b-button variant="primary d-block send-btn" @click="sendNFT">Send</b-button>
-            </b-input-group-append>
-          </b-input-group>
+          <form @submit.prevent="sendNFT">
+            <b-input-group class="mt-3">
+              <input type="text" required class="form-control" placeholder="NEAR Address" v-model="sendToNearAddress"/>
+              <b-input-group-append>
+                <b-button variant="primary d-block send-btn" type="submit">Send</b-button>
+              </b-input-group-append>
+            </b-input-group>
+          </form>
         </div>
       </b-modal>
 
