@@ -29,11 +29,11 @@
         <Preloader color="grey" scale="0.7" v-if="!ready"/>
 
         <div class="cards" v-if="ready && myItems.length">
-          <b-card title="Card Title"
+          <b-card :title="item.metadata.title"
                   v-for="item in myItems"
                   :key="item.token_id"
                   :img-src="item.metadata.media">
-            <p class="card-description" v-if="item.description">Size: {{ item.description }}</p>
+            <p class="card-description" v-if="item.metadata.description">Size: {{ item.metadata.description }}</p>
             <div class="card-buttons">
               <b-button href="#" variant="secondary btn-sm" v-b-modal.modal-send @click="selectedNFT=item">
                 Send NFT
