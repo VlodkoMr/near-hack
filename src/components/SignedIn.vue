@@ -202,8 +202,8 @@ import Big from 'big.js';
 import Preloader from './Preloader.vue';
 import Loading from 'vue-loading-overlay';
 
-const VUE_APP_SERVER_IP = 'http://46.101.118.74:9090'
-
+// const VUE_APP_SERVER_IP = 'http://46.101.118.74:9090'
+const VUE_APP_SERVER_IP = 'http://localhost:9090'
 export default {
   name: "SignedIn",
 
@@ -337,35 +337,20 @@ export default {
           const checkCoordInterval = setInterval(() => {
             axios.get(`${VUE_APP_SERVER_IP}/coordinates/${hash}`).then(response => {
               if (response) {
-                resultCoordinates = response.data;
                 clearInterval(checkCoordInterval);
+                resultCoordinates = response.data;
+                resultImage = `${VUE_APP_SERVER_IP}/pict/${hash}`;
+
+                console.log('------- CREATE -------');
+                console.log(hash);
+                console.log(resultImage);
+                console.log(resultCoordinates);
+
+                this.createNFT(hash, resultImage, resultCoordinates);
+                this.createForm.isUpload = false;
               }
             });
           }, 3000);
-
-          resultImage = 'https://image.url'
-          // const checkMediaInterval = setInterval(() => {
-          //   axios.get(`${VUE_APP_SERVER_IP}/imgfull/${hash}`).then(response => {
-          //     if (response) {
-          //       resultImage = response.data;
-          //       clearInterval(checkMediaInterval);
-          //     }
-          //   });
-          // }, 3000);
-
-          const finalInterval = setInterval(() => {
-            if (resultCoordinates && resultImage) {
-
-              console.log('------- CREATE -------');
-              console.log(hash);
-              console.log(resultImage);
-              console.log(resultCoordinates);
-
-              this.createNFT(hash, resultImage, resultCoordinates);
-              this.createForm.isUpload = false;
-              clearInterval(finalInterval);
-            }
-          }, 100);
 
         } else {
           this.createForm.isUpload = false;
@@ -376,15 +361,6 @@ export default {
         alert(err.message);
       });
     },
-    // tmpCreateNFT() {
-    //   const json = [123, 1232, 435, 346, 6, 456, 46, 23, 43, 4, 32, 3, 53, 45, 345, 23];
-    //   this.createForm.title = 'test 2';
-    //   this.createNFT(
-    //     "123456788",
-    //     "https://chaindebrief.com/wp-content/uploads/2021/09/NFT-Gas-War-FI.jpg",
-    //     JSON.stringify(json)
-    //   );
-    // },
     async createNFT(hash, mediaUrl, coordinates) {
       const token_metadata = {
         title: this.createForm.title,
@@ -395,10 +371,7 @@ export default {
       };
 
       try {
-        // console.log(token_metadata, window.accountId)
-        const GAS = Big(3).times(10 ** 13).toFixed();
-        // const PAYMENT = Big(0.1).times(10 ** 24).toFixed();
-
+        const GAS = Big(300).times(10 ** 12).toFixed();
         await window.contract.nft_mint({
           token_id: hash,
           receiver_id: window.accountId,
@@ -413,7 +386,7 @@ export default {
       }
     },
     sendNFT() {
-      const GAS = Big(3).times(10 ** 13).toFixed();
+      const GAS = Big(300).times(10 ** 12).toFixed();
       const PAYMENT = 1;
 
       window.contract.nft_transfer({
@@ -427,7 +400,7 @@ export default {
     },
     createPhysicalItem() {
       this.submitOrder = true;
-      const GAS = Big(3).times(10 ** 13).toFixed();
+      const GAS = Big(300).times(10 ** 12).toFixed();
 
       window.contract.create_physical_item({
         token_id: this.selectedNFT.token_id.toString(),
