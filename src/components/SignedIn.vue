@@ -343,17 +343,24 @@ export default {
             });
           }, 3000);
 
-          const checkMediaInterval = setInterval(() => {
-            axios.get(`${VUE_APP_SERVER_IP}/imgfull/${hash}`).then(response => {
-              if (response) {
-                resultImage = response.data;
-                clearInterval(checkMediaInterval);
-              }
-            });
-          }, 3000);
+          resultImage = 'https://image.url'
+          // const checkMediaInterval = setInterval(() => {
+          //   axios.get(`${VUE_APP_SERVER_IP}/imgfull/${hash}`).then(response => {
+          //     if (response) {
+          //       resultImage = response.data;
+          //       clearInterval(checkMediaInterval);
+          //     }
+          //   });
+          // }, 3000);
 
           const finalInterval = setInterval(() => {
             if (resultCoordinates && resultImage) {
+
+              console.log('------- CREATE -------');
+              console.log(hash);
+              console.log(resultImage);
+              console.log(resultCoordinates);
+
               this.createNFT(hash, resultImage, resultCoordinates);
               this.createForm.isUpload = false;
               clearInterval(finalInterval);
