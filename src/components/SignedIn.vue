@@ -336,8 +336,8 @@ export default {
 
           const checkCoordInterval = setInterval(() => {
             axios.get(`${VUE_APP_SERVER_IP}/coordinates/${hash}`).then(response => {
-              if (response.data) {
-                resultCoordinates = response.data.jsonFile;
+              if (response) {
+                resultCoordinates = response.data;
                 clearInterval(checkCoordInterval);
               }
             });
@@ -345,9 +345,8 @@ export default {
 
           const checkMediaInterval = setInterval(() => {
             axios.get(`${VUE_APP_SERVER_IP}/imgfull/${hash}`).then(response => {
-              // console.log(response.data);
-              if (response.data.finished) {
-                resultImage = response.data.mediaUrl;
+              if (response) {
+                resultImage = response.data;
                 clearInterval(checkMediaInterval);
               }
             });
