@@ -376,15 +376,15 @@ export default {
         alert(err.message);
       });
     },
-    tmpCreateNFT() {
-      const json = [123, 1232, 435, 346, 6, 456, 46, 23, 43, 4, 32, 3, 53, 45, 345, 23];
-      this.createForm.title = 'test 2';
-      this.createNFT(
-        "123456788",
-        "https://chaindebrief.com/wp-content/uploads/2021/09/NFT-Gas-War-FI.jpg",
-        JSON.stringify(json)
-      );
-    },
+    // tmpCreateNFT() {
+    //   const json = [123, 1232, 435, 346, 6, 456, 46, 23, 43, 4, 32, 3, 53, 45, 345, 23];
+    //   this.createForm.title = 'test 2';
+    //   this.createNFT(
+    //     "123456788",
+    //     "https://chaindebrief.com/wp-content/uploads/2021/09/NFT-Gas-War-FI.jpg",
+    //     JSON.stringify(json)
+    //   );
+    // },
     async createNFT(hash, mediaUrl, coordinates) {
       const token_metadata = {
         title: this.createForm.title,
@@ -397,13 +397,13 @@ export default {
       try {
         // console.log(token_metadata, window.accountId)
         const GAS = Big(3).times(10 ** 13).toFixed();
-        const PAYMENT = Big(0.1).times(10 ** 24).toFixed();
+        // const PAYMENT = Big(0.1).times(10 ** 24).toFixed();
 
         await window.contract.nft_mint({
           token_id: hash,
           receiver_id: window.accountId,
           token_metadata
-        }, GAS, PAYMENT);
+        }, GAS);
       } catch (e) {
         alert("Something went wrong!");
         throw e
