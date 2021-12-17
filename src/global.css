@@ -152,3 +152,11 @@ header .container {
     text-align: center;
     padding: 40px 0;
 }
+
+.or-block {
+    position: absolute;
+    left: 45%;
+    top: -16px;
+    padding: 3px 10px;
+    background: #FFF;
+}

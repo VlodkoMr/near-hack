@@ -17,7 +17,7 @@
         </div>
         <div class="text-right">
           <span class="username">{{ accountId }}</span>
-          <button @click="isAddScreen=true" class="btn btn-outline-primary m-2">New Item</button>
+          <button @click="activePage='art'; isAddScreen=true" class="btn btn-outline-primary m-2">New Item</button>
           <button class="btn btn-outline-danger" v-on:click="logout">Sign out</button>
         </div>
       </div>
@@ -38,7 +38,7 @@
               <b-button href="#" variant="secondary btn-sm" v-b-modal.modal-send @click="selectedNFT=item">
                 Send NFT
               </b-button>
-              <b-button href="#" variant="primary btn-sm" v-b-modal.modal-create @click="selectedNFT=item; itemCreated=null">
+              <b-button href="#" variant="primary btn-sm" v-b-modal.modal-create @click="loadModalCreate(item)">
                 Create Physical Item
               </b-button>
             </div>
@@ -120,7 +120,16 @@
 
       <b-modal id="modal-create" title="Create Physical Item" hide-footer>
         <form @submit.prevent="createPhysicalItem" v-if="!itemCreated">
-          <p class="text-center mt-3 mb-4">Redeem your NFT item to the form of physical product!</p>
+          <div class="text-center mt-3">
+            <a target="_blank" :href="getGcodeURL()" class="cursor-pointer text-primary text-decoration-underline">Download gCode</a>
+            and print NFT yourself.
+          </div>
+          <div class="position-relative">
+            <hr class="mb-4 mt-4">
+            <span class="or-block">OR</span>
+          </div>
+
+          <p class="text-center mt-3 mb-4">Create order and we will print it for you:</p>
           <label class="form-group d-block mb-2">
             <span class="form-label text-dark">Your Name<sup>*</sup></span>
             <input type="text" required name="name" class="form-control" v-model="createItemForm.name"/>
@@ -160,18 +169,20 @@
         </div>
       </div>
 
-      <table class="table" v-if="ready && myOrders.length">
-        <tr>
-          <th>Order ID</th>
-          <th>NFT</th>
-          <th>Details</th>
-        </tr>
-        <tr v-for="order of myOrders" :key="order.id">
-          <td>{{ order.id }}</td>
-          <td><img :src="order.media" height="40" alt="..."></td>
-          <td>{{ order.data }}</td>
-        </tr>
-      </table>
+      <div class="col-8 offset-2">
+        <table class="table text-white" v-if="ready && myOrders.length">
+          <tr class="text-secondary">
+            <th class="text-center p-2">NFT</th>
+            <th>Order ID</th>
+            <th>Details</th>
+          </tr>
+          <tr v-for="order of myOrders" :key="order.id">
+            <td width="120"><img :src="order.media" width="100" alt="..." style="margin-left: 7px;"></td>
+            <td width="120">{{ order.id }}</td>
+            <td>{{ order.data }}</td>
+          </tr>
+        </table>
+      </div>
     </main>
   </div>
 </template>
@@ -183,7 +194,7 @@ import Big from 'big.js';
 import Preloader from './Preloader.vue';
 import Loading from 'vue-loading-overlay';
 
-const VUE_APP_SERVER_IP = 'http://127.0.0.1'
+const VUE_APP_SERVER_IP = 'http://46.101.118.74:9090'
 
 export default {
   name: "SignedIn",
@@ -219,6 +230,7 @@ export default {
       ready: false,
       selectedNFT: {},
       sendToNearAddress: "",
+      currentGcodeURL: "",
       myItems: [],
       myItemIds: [],
       myOrders: [],
@@ -247,6 +259,9 @@ export default {
       this.activePage = 'orders';
       this.retrieveMyOrders();
     },
+    getGcodeURL() {
+      return `${VUE_APP_SERVER_IP}/gcode/${this.selectedNFT.token_id}`;
+    },
     retrieveMyOrders() {
       this.ready = false;
       window.contract.all_orders({account_id: window.accountId}).then(items => {
@@ -255,11 +270,9 @@ export default {
           for (const [key, value] of Object.entries(items)) {
             let idList = Object.keys(this.myItemIds);
             if (idList.indexOf(key) !== -1) {
-              let currentKey = idList.indexOf(key);
-              console.log(idList[currentKey])
               this.myOrders.push({
                 'id': key,
-                'media': idList[currentKey],
+                'media': this.myItemIds[key],
                 'data': value
               });
             }
@@ -268,6 +281,10 @@ export default {
 
         this.ready = true;
       })
+    },
+    loadModalCreate(item) {
+      this.selectedNFT = item;
+      this.itemCreated = null;
     },
     retrieveMyItems() {
       this.ready = false;
@@ -344,15 +361,15 @@ export default {
         alert(err.message);
       });
     },
-    // tmpCreateNFT() {
-    //   const json = [123, 1232, 435, 346, 6, 456, 46, 23, 43, 4, 32, 3, 53, 45, 345, 23];
-    //   this.createForm.title = 'test 2';
-    //   this.createNFT(
-    //     "123456789",
-    //     "https://www.dhresource.com/0x0/f2/albu/g11/M01/87/FB/rBNaFl8f-beARRmbAAKdNBeOmZc224.jpg/lover-hands-graffiti-art-street-art-canvas.jpg",
-    //     JSON.stringify(json)
-    //   );
-    // },
+    tmpCreateNFT() {
+      const json = [123, 1232, 435, 346, 6, 456, 46, 23, 43, 4, 32, 3, 53, 45, 345, 23];
+      this.createForm.title = 'test 2';
+      this.createNFT(
+        "123456788",
+        "https://chaindebrief.com/wp-content/uploads/2021/09/NFT-Gas-War-FI.jpg",
+        JSON.stringify(json)
+      );
+    },
     async createNFT(hash, mediaUrl, coordinates) {
       const token_metadata = {
         title: this.createForm.title,
