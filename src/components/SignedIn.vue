@@ -104,7 +104,6 @@
           <loading :active="createForm.isUpload" :can-cancel="true"/>
         </div>
       </div>
-      <!--      <button @click="tmpCreateNFT" class="btn btn-danger mt-5">Generate NFT (TMP)</button>-->
 
       <b-modal id="modal-send" title="Send NFT" hide-footer>
         <div class="p-5">
@@ -157,8 +156,10 @@
         </form>
 
         <div v-if="itemCreated" class="order-sent">
-          <p>Your order successfully sent!</p>
-          <p><b>Order Number: {{ itemCreated }}</b></p>
+          <h5 class="mb-4">Your order successfully sent!</h5>
+          <iframe width="100%" height="315" src="https://www.youtube.com/embed/RcWFKN_uj3w" title="YouTube video player" frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <p class="mt-4"><b>Order Number: {{ itemCreated }}</b></p>
           <button class="btn btn-outline-secondary" type="button" @click="$bvModal.hide('modal-create')">Close</button>
         </div>
 
@@ -340,12 +341,6 @@ export default {
                 clearInterval(checkCoordInterval);
                 resultCoordinates = response.data;
                 resultImage = `${VUE_APP_SERVER_IP}/pict/${hash}`;
-
-                console.log('------- CREATE -------');
-                console.log(hash);
-                console.log(resultImage);
-                console.log(resultCoordinates);
-
                 this.createNFT(hash, resultImage, resultCoordinates);
                 this.createForm.isUpload = false;
               }
