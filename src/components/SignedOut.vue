@@ -24,7 +24,7 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-6 text-center offset-3 mt-5 pt-5">
+        <div class="col-6 text-center offset-3 pt-5 mb-5">
           <hr class="mb-5">
           <h4>From digital NFT to your wall</h4>
           <p>FlowNFT is the easiest way to print your NFTs on demand. Your NFTs will look exactly like you want them to with rich colors and sharp contrast.</p>
