@@ -21,7 +21,14 @@
         </div>
         <div class="col-6">
           <img src="../assets/sample.png" alt="" style="width: 100%; margin-top: 15%;">
-          <h5 style="margin-top: 40px; text-align: center; font-weight: normal; font-size: 18px;">From digital NFT to your wall</h5>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-6 text-center offset-3 mt-5 pt-5">
+          <hr class="mb-5">
+          <h4>From digital NFT to your wall</h4>
+          <p>FlowNFT is the easiest way to print your NFTs on demand. Your NFTs will look exactly like you want them to with rich colors and sharp contrast.</p>
+          <button v-on:click="login" class="btn btn-secondary sign-in mt-2">Become Art Producer</button>
         </div>
       </div>
     </div>
