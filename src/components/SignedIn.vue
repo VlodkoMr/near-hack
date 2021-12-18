@@ -14,6 +14,11 @@
                 :class="{'text-info': activePage==='orders', 'text-white': activePage!=='orders'}">
             My Orders
           </span>
+          <span class="btn btn-link ml-1"
+                @click="openStorePage"
+                :class="{'text-info': activePage==='store', 'text-white': activePage!=='store'}">
+            Create Store
+          </span>
         </div>
         <div class="text-right">
           <span class="username">{{ accountId }}</span>
@@ -133,6 +138,14 @@
           <p class="text-center mt-3 mb-4">Create order and we will print it for you:</p>
           <div v-if="!submitOrder">
             <label class="form-group d-block mb-2">
+              <span class="form-label text-dark">Art Producer<sup>*</sup></span>
+              <select class="form-select" aria-label="Default select example">
+                <option value="1">SuperArt One (Kyiv)</option>
+                <option value="2">BlackStreet (Lviv)</option>
+                <option value="3">Magic Print (Poltava)</option>
+              </select>
+            </label>
+            <label class="form-group d-block mb-2">
               <span class="form-label text-dark">Your Name<sup>*</sup></span>
               <input type="text" required name="name" class="form-control" v-model="createItemForm.name"/>
             </label>
@@ -144,6 +157,7 @@
               <span class="form-label text-dark">Address<sup>*</sup></span>
               <textarea v-model="createItemForm.address" class="form-control"></textarea>
             </label>
+
             <div class="mt-4 d-flex" style="justify-content: space-between">
               <button class="btn btn-outline-secondary" type="button" @click="$bvModal.hide('modal-create')">Cancel</button>
               <button class="btn btn-primary" type="submit">Create Order</button>
@@ -165,7 +179,6 @@
 
       </b-modal>
     </main>
-
 
     <main class="container" v-if="activePage==='orders'">
       <h4 class="text-center mb-4">My Orders</h4>
@@ -192,6 +205,32 @@
           </tr>
         </table>
       </div>
+    </main>
+
+    <main class="container" v-if="activePage==='store'">
+      <h4 class="text-center mb-4">Become Art Producer</h4>
+      <form class="col-4 offset-4">
+        <b-input-group class="mt-3">
+          <input type="text" required class="form-control" placeholder="Public Name"/>
+        </b-input-group>
+        <b-input-group class="mt-3">
+          <select class="form-select" aria-label="Country">
+            <option selected>Country</option>
+            <option value="">Ukraine</option>
+            <option value="">Poland</option>
+            <option value="">USA</option>
+          </select>
+        </b-input-group>
+        <b-input-group class="mt-3">
+          <input type="text" required class="form-control" placeholder="City"/>
+        </b-input-group>
+        <b-input-group class="mt-3">
+          <textarea name="" placeholder="Address" required class="form-control"></textarea>
+        </b-input-group>
+        <div class="mt-3">
+          <button class="btn btn-primary">Create Store</button>
+        </div>
+      </form>
     </main>
   </div>
 </template>
@@ -268,6 +307,8 @@ export default {
     openOrdersPage() {
       this.activePage = 'orders';
       this.retrieveMyOrders();
+    }, openStorePage() {
+      this.activePage = 'store';
     },
     getGcodeURL() {
       return `${VUE_APP_SERVER_IP}/gcode/${this.selectedNFT.token_id}`;
