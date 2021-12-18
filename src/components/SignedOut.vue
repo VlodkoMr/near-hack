@@ -21,6 +21,7 @@
         </div>
         <div class="col-6">
           <img src="../assets/sample.png" alt="" style="width: 100%; margin-top: 15%;">
+          <h5 style="margin-top: 40px; text-align: center; font-weight: normal; font-size: 18px;">From digital NFT to your wall</h5>
         </div>
       </div>
     </div>
