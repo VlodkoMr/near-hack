@@ -3,7 +3,7 @@
     <header class="mb-5">
       <div class="container">
         <div>
-          <img src="../assets/logo.svg" alt="" height="40" class="mt-2">
+          <img src="../assets/logo.svg" alt="" height="40" class="mt-2" @click="openArtPage">
           <span class="btn btn-link ml-5"
                 @click="openArtPage"
                 :class="{'text-info': activePage==='art', 'text-white': activePage!=='art'}">
