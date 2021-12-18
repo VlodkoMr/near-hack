@@ -2,11 +2,6 @@
   <div id="root">
     <SignedOut v-show="!isSignedIn"/>
     <SignedIn v-show="isSignedIn"/>
-    <footer class="text-center footer">
-      <div class="container">
-        <small>All rights reserved. Near-Hack</small>
-      </div>
-    </footer>
   </div>
 </template>
 
